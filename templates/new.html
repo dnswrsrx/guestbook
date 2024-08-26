@@ -1,0 +1,44 @@
+<body>
+  <main>
+    <header>
+      <h1>Guest Book</h1>
+      <p>
+        <a href="/">Return to the Guest Book</a>!
+      </p>
+    </header>
+
+    <form>
+      <div>
+        <textarea name="text"></textarea>
+      </div>
+      <div>
+        <input type="text" name="author" />
+      </div>
+      <button type="submit">Submit</button>
+    </form>
+  </main>
+
+  <script type="application/javascript">
+    document.querySelector('form').addEventListener('submit', e => {
+      e.preventDefault()
+      const data = new FormData(e.target)
+
+      // fetch('https://guestbook.dnswrsrx.com', {
+      fetch('http://localhost:5000', {
+        headers: {Authorization: "Basic <<secret>>"},
+        method: "POST",
+        body: data
+      })
+        .then(resp => resp.text())
+        .then(id => {
+          const posts = localStorage.getItem('posts')
+          if (!posts) {
+            localStorage.setItem('posts', id)
+          } else {
+            localStorage.setItem('posts', `${posts},${id}`)
+          }
+          location.assign(location.href)
+        })
+    })
+  </script>
+</body>

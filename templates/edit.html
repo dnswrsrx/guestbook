@@ -1,0 +1,78 @@
+<head>
+  <style type="text/css" media="all">
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <header>
+      <h1>Guest Book</h1>
+      <p>
+        You may edit your entry below.
+        Should have proofread first hey..
+        <a href="/">Return to the Guest Book</a>!
+      </p>
+    </header>
+
+    <p id="save" class="hidden">Your edits have been saved!</p>
+
+    <form>
+      <div>
+        <textarea name="text"></textarea>
+      </div>
+      <div>
+        <input type="text" name="author" />
+      </div>
+      <button type="submit">Submit</button>
+    </form>
+  </main>
+
+  <script type="application/javascript">
+    let posts = localStorage.getItem('posts')
+    posts = posts ? posts.split(',') : []
+
+    const params = new URLSearchParams(location.search)
+    const id = params.get('id')
+
+    document.addEventListener('DOMContentLoaded', () => {
+
+      if (!posts.includes(id)) location.assign('/')
+
+      // fetch(`https://guestbook.dnswrsrx.com/edit/${id}`, {
+      fetch(`http://localhost:5000/edit/${id}`, {
+        headers: {Authorization: "Basic <<secret>>"},
+      })
+        .then(resp => resp.json())
+        .then(d => {
+          document.querySelector('textarea').appendChild(document.createTextNode(d.text))
+          document.querySelector('input').value = d.author
+        })
+
+      document.querySelectorAll('textarea, input').forEach(e => {
+        e.addEventListener('input', () => {
+          document.querySelector('p#save').classList.add('hidden')
+        })
+      })
+
+      document.querySelector('form').addEventListener('submit', e => {
+        e.preventDefault()
+        const data = new FormData(e.target)
+
+        // fetch(`https://guestbook.dnswrsrx.com/edit/${id}`, {
+        fetch(`http://localhost:5000/edit/${id}`, {
+          headers: {Authorization: "Basic <<secret>>"},
+          method: "PUT",
+          body: data
+        })
+          .then(resp => resp.text())
+          .then(() => {
+            document.querySelector('p.hidden').classList.remove('hidden')
+          })
+      })
+    })
+
+      </script>
+</body>

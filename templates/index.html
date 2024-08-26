@@ -1,0 +1,48 @@
+<body>
+  <header>
+    <h1>Guest Book</h1>
+    <p>
+      Thank you for coming!
+      <a href="/new.html">Add an entry</a> to our Guest Book if you'd like,
+      or peruse the soppy messages others have written!
+    </p>
+  </header>
+
+  <main></main>
+
+  <script type="application/javascript">
+    document.addEventListener('DOMContentLoaded', () => {
+      // fetch('https://guestbook.dnswrsrx.com', {
+      fetch('http://localhost:5000', {
+        headers: {Authorization: "Basic <<secret>>"}
+      })
+        .then(resp => resp.json())
+        .then(payload => {
+          const posts = localStorage.getItem('posts') || []
+
+          payload.forEach(data => {
+            const article = document.createElement('article')
+
+            const text = document.createElement('p')
+            text.appendChild(document.createTextNode(data.text))
+
+            const author = document.createElement('p')
+            author.appendChild(document.createTextNode(data.author))
+
+            article.appendChild(text)
+            article.appendChild(author)
+
+            if (posts.includes(data.id)) {
+              const link = document.createElement('a')
+              link.href = `/edit.html?id=${data.id}`
+              link.appendChild(document.createTextNode('Edit'))
+              article.appendChild(link)
+            }
+
+            document.querySelector('main').appendChild(article)
+          })
+        })
+        .catch(e => console.log(e))
+    })
+  </script>
+</body>

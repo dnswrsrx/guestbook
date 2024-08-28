@@ -16,7 +16,7 @@ flask_cors.CORS(app, origins=SECRETS['domains'])
 
 @app.before_request
 def authorization():
-    if flask.request.method.upper() != 'OPTIONS' and not secrets.compare_digest(flask.request.headers.get('Authorization'), f'Basic {SECRETS['data']}'):
+    if flask.request.method.upper() != 'OPTIONS' and isinstance(flask.request.headers.get('Authorization'), str) and not secrets.compare_digest(flask.request.headers.get('Authorization'), f'Basic {SECRETS['data']}'):
         flask.abort(403)
 
 

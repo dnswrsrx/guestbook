@@ -41,14 +41,14 @@ def add():
 
 @app.get('/edit/<id>')
 def entry(id):
-    if (entry := flask.g.db.execute('select * from entry where id = ?', (id,)).fetchone()) is not None:
+    if (entry := flask.g.db.execute('select * from entry where id=?', (id,)).fetchone()) is not None:
         return {k: entry[k] for k in entry.keys()}
     flask.abort(404)
 
 @app.put('/edit/<id>')
 def edit(id):
-    if (entry := flask.g.db.execute('select * from entry where id = ?', (id,)).fetchone()) is not None:
-        flask.g.db.execute('update entry set text = ?, author = ?, colour = ? where id = ?', (
+    if (entry := flask.g.db.execute('select * from entry where id=?', (id,)).fetchone()) is not None:
+        flask.g.db.execute('update entry set text=?, author=?, colour=? where id=?', (
             flask.request.form.get('text'),
             flask.request.form.get('author') or 'anonymous',
             flask.request.form.get('colour') or '000000',

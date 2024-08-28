@@ -39,6 +39,7 @@ def add():
         return str(cursor.lastrowid), 201
     return flask.abort(400)
 
+
 @app.get('/edit/<id>')
 def entry(id):
     if (entry := flask.g.db.execute('select * from entry where id=?', (id,)).fetchone()) is not None:

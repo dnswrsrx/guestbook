@@ -55,5 +55,5 @@ def edit(id):
             id
         ))
         flask.g.db.commit()
-        return ''
+        return '', 204
     flask.abort(404)

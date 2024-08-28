@@ -9,7 +9,7 @@ app = flask.Flask(__file__)
 
 with open('./.secrets.json') as f:
     SECRETS = json.loads(f.read().strip())
-
+ 
 db.init_app(app)
 flask_cors.CORS(app, origins=SECRETS['domains'])
 

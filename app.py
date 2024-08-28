@@ -58,3 +58,17 @@ def edit(id):
         flask.g.db.commit()
         return '', 204
     flask.abort(404)
+
+
+@app.route('/admin-listing', methods=('GET', 'POST'))
+def admin_listing():
+    if flask.request.method == 'POST':
+        if flask.request.form.get('id'):
+            entry_id, admin_hide = flask.g.db.execute('select id, admin_hide from entry where id=?', (flask.request.form.get('id'),)).fetchone()
+            flask.g.db.execute('update entry set admin_hide=? where id=?', (not admin_hide, entry_id))
+            flask.g.db.commit()
+
+            return flask.redirect(flask.request.path)
+
+    entries = ({k: e[k] for k in e.keys()} for e in flask.g.db.execute('select * from entry order by created desc;'))
+    return flask.render_template('admin_listing.html', entries=entries)

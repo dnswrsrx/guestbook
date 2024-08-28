@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Guestbook Admin Listing</title>
+  </head>
+  <body>
+    <h1>Admin Listing of Guestbook Entries</h1>
+
+    {% for entry in entries %}
+      <div>
+        <p>{{ entry.text or '[empty]' }}</p>
+        <p>{{ entry.author or '[anonymous]' }}</p>
+        <p>{{ entry.id }} | {{ entry.created }}</p>
+        <p>&#974{% if not entry.hide %}5{% else %}6{% endif %};</p>
+        <form action="{{ request.path }}" method="POST">
+          <input type="hidden" name="id" value="{{ entry.id }}">
+          <button>
+            {% if entry.admin_hide %}Enable{% else %}Disable{% endif %}
+          </button>
+        </form>
+        <hr />
+      </div>
+    {% endfor %}
+  </body>
+</html>

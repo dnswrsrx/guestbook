@@ -48,10 +48,11 @@ def entry(id):
 @app.put('/edit/<id>')
 def edit(id):
     if (entry := flask.g.db.execute('select * from entry where id=?', (id,)).fetchone()) is not None:
-        flask.g.db.execute('update entry set text=?, author=?, colour=? where id=?', (
-            flask.request.form.get('text'),
-            flask.request.form.get('author') or 'anonymous',
-            flask.request.form.get('colour') or '000000',
+        flask.g.db.execute('update entry set text=?, author=?, colour=?, hide=? where id=?', (
+            flask.request.form.get('text', ''),
+            flask.request.form.get('author', ''),
+            flask.request.form.get('colour', ''),
+            not (flask.request.form.get('text') and flask.request.form.get('author')),
             id
         ))
         flask.g.db.commit()

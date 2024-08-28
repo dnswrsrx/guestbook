@@ -26,16 +26,18 @@ def list():
 
 @app.post('/')
 def add():
-    cursor = flask.g.db.cursor()
-    cursor.execute(
-        'insert into entry (text, author, colour) values (?, ?, ?)', (
-            flask.request.form.get('text'),
-            flask.request.form.get('author') or 'anonymous',
-            flask.request.form.get('colour') or '000000',
+    if flask.request.form.get('text') and flask.request.form.get('author'):
+        cursor = flask.g.db.cursor()
+        cursor.execute(
+            'insert into entry (text, author, colour) values (?, ?, ?)', (
+                flask.request.form.get('text'),
+                flask.request.form.get('author'),
+                flask.request.form.get('colour', ''),
+            )
         )
-    )
-    cursor.connection.commit()
-    return str(cursor.lastrowid)
+        cursor.connection.commit()
+        return str(cursor.lastrowid), 201
+    return flask.abort(400)
 
 @app.get('/edit/<id>')
 def entry(id):

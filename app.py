@@ -22,7 +22,7 @@ def authorization():
 
 @app.get('/')
 def list():
-    return [{k: e[k] for k in e.keys()} for e in flask.g.db.execute('select * from entry where hide = 0 order by created desc;')]
+    return [{k: e[k] for k in e.keys()} for e in flask.g.db.execute('select author, colour, created, hide, id, text from entry where hide=false and admin_hide=false order by created desc;')]
 
 @app.post('/')
 def add():

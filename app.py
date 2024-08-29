@@ -11,7 +11,10 @@ with open('./.secrets.json') as f:
     SECRETS = json.loads(f.read().strip())
  
 db.init_app(app)
-flask_cors.CORS(app, origins=SECRETS['domains'])
+flask_cors.CORS(app,
+                origins=SECRETS['domains'],
+                methods=['GET', 'HEAD', 'POST', 'OPTIONS', 'PUT'],
+                resources=[r'/', r'/edit/*'])
 
 
 @app.before_request

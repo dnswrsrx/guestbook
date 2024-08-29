@@ -3,7 +3,7 @@
     <header>
       <h1>Guest Book</h1>
       <p>
-        <a href="/">Return to the Guest Book</a>!
+        <a href="./">Return to the Guest Book</a>!
       </p>
     </header>
 
@@ -23,9 +23,8 @@
       e.preventDefault()
       const data = new FormData(e.target)
 
-      // fetch('https://guestbook.dnswrsrx.com', {
-      fetch('http://localhost:5000', {
-        headers: {Authorization: "Basic <<secret>>"},
+      fetch('https://guestbook.dnswrsrx.com/', {
+        headers: {Authorization: "Basic 844f30425b73ca1a6b80d0b483b758a5"},
         method: "POST",
         body: data
       })

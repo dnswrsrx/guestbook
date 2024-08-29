@@ -13,7 +13,7 @@
       <p>
         You may edit your entry below.
         Should have proofread first hey..
-        <a href="/">Return to the Guest Book</a>!
+        <a href="./">Return to the Guest Book</a>!
       </p>
     </header>
 
@@ -41,9 +41,8 @@
 
       if (!posts.includes(id)) location.assign('/')
 
-      // fetch(`https://guestbook.dnswrsrx.com/edit/${id}`, {
-      fetch(`http://localhost:5000/edit/${id}`, {
-        headers: {Authorization: "Basic <<secret>>"},
+      fetch(`https://guestbook.dnswrsrx.com//edit/${id}`, {
+        headers: {Authorization: "Basic 844f30425b73ca1a6b80d0b483b758a5"},
       })
         .then(resp => resp.json())
         .then(d => {
@@ -62,8 +61,8 @@
         const data = new FormData(e.target)
 
         // fetch(`https://guestbook.dnswrsrx.com/edit/${id}`, {
-        fetch(`http://localhost:5000/edit/${id}`, {
-          headers: {Authorization: "Basic <<secret>>"},
+        fetch(`https://guestbook.dnswrsrx.com//edit/${id}`, {
+          headers: {Authorization: "Basic 844f30425b73ca1a6b80d0b483b758a5"},
           method: "PUT",
           body: data
         })

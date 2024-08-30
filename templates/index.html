@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <link rel="stylesheet" href="./index.css">
+  <script src="./index.js" defer></script>
 </head>
 
 <body>
@@ -19,20 +20,25 @@
       </p>
     </header>
     <section>
-      <form>
+      <form data-form-state="new">
         <article style="--color-background: #b3f473;">
-          <p class="content">
+          <div class="content">
             <textarea class="content__textarea" name="text" maxlength="1000" placeholder="Tell us why you love us."
               required></textarea>
-          </p>
+            <div class="icon icon--plus">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16">
+                <path fill="#555" d="M10 1H6v5H1v4h5v5h4v-5h5V6h-5V1Z" />
+              </svg>
+            </div>
+          </div>
           <div class="meta">
             <p class="author-input">
               <input class="author__text-input" type="text" name="author" placeholder="your name" required />
             </p>
             <div class="meta__footer">
               <p class="colour-input-wrapper">
-                <input class="color-input" type="color" name="colour" value="#b3f473" id="color-picker"/>
-                <label class="color-label">#b3f473</label>
+                <input class="color-input" type="color" name="colour" value="#b3f473" id="color-picker" />
+                <label class="color-label" for="color-picker">#b3f473</label>
               </p>
               <button class="submit" type="submit">post</button>
             </div>
@@ -49,89 +55,13 @@
             </p>
             <div class="meta__footer">
               <p class="colour" js-colour></p>
-              <a href="" class="edit-link" js-edit-link>Edit</a>
+              <button class="button--edit" type="button" js-button-edit>Edit</button>
             </div>
           </div>
         </article>
       </template>
     </section>
   </main>
-
-  <script type="application/javascript">
-    document.addEventListener('DOMContentLoaded', () => {
-      fetch('https://guestbook.dnswrsrx.com/', {
-        headers: { Authorization: "Basic 844f30425b73ca1a6b80d0b483b758a5" }
-      })
-        .then(resp => resp.json())
-        .then(payload => {
-          const selectors = {
-            article: "[js-article]",
-            content: "[js-content]",
-            author: "[js-author]",
-            colour: "[js-colour]",
-            editLink: "[js-edit-link]"
-          }
-
-          const posts = localStorage.getItem('posts') || []
-          const template = document.getElementById("article-template");
-
-          payload.forEach(data => {
-            const templateInstance = template.cloneNode(true).content
-
-            const article = templateInstance.querySelector(selectors.article);
-            const content = templateInstance.querySelector(selectors.content);
-            const author = templateInstance.querySelector(selectors.author);
-            const colour = templateInstance.querySelector(selectors.colour);
-            const editLink = templateInstance.querySelector(selectors.editLink);
-
-            // modify template
-            article.style.setProperty("--color-background", `${data.colour}`);
-            content.innerHTML = data.text;
-            author.innerHTML = data.author;
-            colour.innerHTML = `${data.colour}`;
-
-            if (posts.includes(data.id)) {
-              editLink.href = `./edit.html?id=${data.id}`
-            } else {
-              editLink.remove()
-            }
-
-            document.querySelector('section').appendChild(templateInstance)
-          })
-        })
-        .catch(e => console.log(e))
-    })
-
-    document.querySelector('form').addEventListener('submit', e => {
-      e.preventDefault()
-      const data = new FormData(e.target)
-
-      fetch('https://guestbook.dnswrsrx.com/', {
-        headers: { Authorization: "Basic 844f30425b73ca1a6b80d0b483b758a5" },
-        method: "POST",
-        body: data
-      })
-        .then(resp => resp.text())
-        .then(id => {
-          const posts = localStorage.getItem('posts')
-          if (!posts) {
-            localStorage.setItem('posts', id)
-          } else {
-            localStorage.setItem('posts', `${posts},${id}`)
-          }
-          location.assign(location.href)
-        })
-    })
-
-    const form = document.querySelector('form');
-    const formArticle = form.querySelector('article');
-    const formColorLabel = form.querySelector('.color-label');
-
-    form.querySelector('#color-picker').addEventListener("input",(e) => {
-      formArticle.style.setProperty("--color-background", e.target.value);
-      formColorLabel.innerText = e.target.value;
-    })
-  </script>
 </body>
 
 </html>

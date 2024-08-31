@@ -29,6 +29,21 @@ def list():
 
 @app.post('/')
 def add():
+
+    # If ID is passed in the form, the form data is to modify an existing entry
+    if (_id := flask.request.form.get('id')):
+        if (entry := flask.g.db.execute('select * from entry where id=?', (_id,)).fetchone()) is not None:
+            flask.g.db.execute('update entry set text=?, author=?, colour=?, hide=? where id=?', (
+                flask.request.form.get('text', ''),
+                flask.request.form.get('author', ''),
+                flask.request.form.get('colour', ''),
+                not (flask.request.form.get('text') and flask.request.form.get('author')),
+                _id
+            ))
+            flask.g.db.commit()
+            return _id, 204
+
+    # Regular adding of new entry if there's text and author data
     if flask.request.form.get('text') and flask.request.form.get('author'):
         cursor = flask.g.db.cursor()
         cursor.execute(

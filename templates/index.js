@@ -26,6 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // modify template
         article.style.setProperty("--color-background", `${data.colour}`);
+        article.dataset.id = data.id;
         content.innerHTML = data.text;
         author.innerHTML = data.author;
         colour.innerHTML = `${data.colour}`;
@@ -55,19 +56,20 @@ document.querySelector("form").addEventListener("submit", (e) => {
   })
     .then((resp) => resp.text())
     .then((id) => {
-      const posts = localStorage.getItem("posts");
-      if (!posts) {
-        localStorage.setItem("posts", id);
-      } else {
-        localStorage.setItem("posts", `${posts},${id}`);
-      }
+      localStorage.setItem("posts", id);
       location.assign(location.href);
     });
 });
 
 const form = document.querySelector("form");
 const formArticle = form.querySelector("article");
+const formContent = form.querySelector(".content");
 const formColorLabel = form.querySelector(".color-label");
+
+formContent.addEventListener("click", () => {
+  form.setAttribute("data-form-state", "edit");
+  form.text.focus();
+});
 
 form.querySelector("#color-picker").addEventListener("input", (e) => {
   _updateFormColour(e.target.value);
@@ -87,9 +89,12 @@ function _initEditButtons() {
       const content = parentArticle.querySelector(selectors.content);
       const author = parentArticle.querySelector(selectors.author);
       const colour = parentArticle.querySelector(selectors.colour);
+
       form.setAttribute("data-form-state", "edit");
       form.text.value = content.innerText;
       form.author.value = author.innerText;
+      form.id.value = parentArticle.dataset.id;
+      form.colour.value = colour.innerText;
       _updateFormColour(colour.innerText);
     });
   });

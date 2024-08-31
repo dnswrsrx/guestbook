@@ -18,9 +18,11 @@
         Add an entry to our Guest Book if you'd like,
         or peruse the soppy messages others have written!
       </p>
+      <a href="//cocktails.brainjuice.ca">Back to menu</a>
     </header>
     <section>
       <form data-form-state="new">
+        <input type="hidden" name="id" value="">
         <article style="--color-background: #b3f473;">
           <div class="content">
             <textarea class="content__textarea" name="text" maxlength="1000" placeholder="Tell us why you love us."
@@ -46,7 +48,7 @@
         </article>
       </form>
       <template id="article-template">
-        <article style="--color-background: #b3f473;" js-article>
+        <article style="--color-background: #b3f473;" js-article data-id="">
           <p class="content" js-content></p>
           <div class="meta">
             <p class="author">

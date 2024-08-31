@@ -54,10 +54,20 @@ section {
   margin-bottom: 24px;
 }
 
-section:has([js-button-edit]) {
-  form {
-    /* display: none; */
-  }
+section:has([js-button-edit]) form {
+  display: none;
+}
+
+section:has([js-button-edit]) form[data-form-state="edit"] {
+  --content-opacity: 1;
+  --icon-opacity: 0;
+  display: block;
+}
+
+section:has([js-button-edit])
+  form[data-form-state="edit"]
+  ~ article:has([js-button-edit]) {
+  display: none;
 }
 
 article {
@@ -121,17 +131,16 @@ article:has([js-button-edit]) {
   font-size: 0.6em;
 }
 
-.button--edit, .submit {
+.button--edit,
+.submit {
   align-self: flex-end;
 }
 
 /* forms */
 
 form {
-  /* --content-opacity: 0; */
-  --content-opacity: 1;
-  /* --icon-opacity: 1; */
-  --icon-opacity: 0;
+  --content-opacity: 0;
+  --icon-opacity: 1;
 }
 
 form .icon {
@@ -160,6 +169,11 @@ form button {
 }
 
 form:focus-within {
+  --content-opacity: 1;
+  --icon-opacity: 0;
+}
+
+form[data-form-state="edit"] {
   --content-opacity: 1;
   --icon-opacity: 0;
 }
